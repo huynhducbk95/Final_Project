@@ -81,16 +81,16 @@ def check_workload_ping(request):
 
 
 def add_nic(request):
-    if request.method == 'POST':
+    if request.method == 'GET':
         openstack_config = {}
-        openstack_config['os_auth_url'] = request.POST.get('os_auth_url', None)
-        openstack_config['os_project_name'] = request.POST.get('os_project_name', None)
-        openstack_config['os_username'] = request.POST.get('os_username', None)
-        openstack_config['os_password'] = request.POST.get('os_password', None)
-        openstack_config['os_project_domain_name'] = request.POST.get('os_project_domain_name', None)
-        openstack_config['os_user_domain_name'] = request.POST.get('os_user_domain_name', None)
-        openstack_config['os_novaclient_version'] = request.POST.get('os_novaclient_version', None)
-        workload_uuid = request.POST.get('uuid', None)
+        openstack_config['os_auth_url'] = request.GET.get('os_auth_url', None)
+        openstack_config['os_project_name'] = request.GET.get('os_project_name', None)
+        openstack_config['os_username'] = request.GET.get('os_username', None)
+        openstack_config['os_password'] = request.GET.get('os_password', None)
+        openstack_config['os_project_domain_name'] = request.GET.get('os_project_domain_name', None)
+        openstack_config['os_user_domain_name'] = request.GET.get('os_user_domain_name', None)
+        openstack_config['os_novaclient_version'] = request.GET.get('os_novaclient_version', None)
+        workload_uuid = request.GET.get('uuid', None)
         openstack_client = OpenstackDriver(cloud_config=openstack_config)
         network_id = openstack_client.choice_network(instance_id=workload_uuid)
         openstack_client.add_nic(instance_id=workload_uuid, net_id=network_id)
