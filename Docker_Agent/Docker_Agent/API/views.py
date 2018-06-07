@@ -57,7 +57,7 @@ def check_workload_ping(request):
         return HttpResponse(json.dumps(result), content_type='application/json')
 
 
-def add_network(request):
+def add_nic(request):
     if request.method == 'GET':
         workload_uuid = request.GET.get('uuid', None)
         network_ip = request.GET.get('ip', None)
