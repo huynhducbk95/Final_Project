@@ -1,6 +1,7 @@
 from keystoneauth1.identity import v3
 from keystoneauth1 import session
 from novaclient.client import Client
+from neutronclient.v2_0.client import Client as Neutron_Client
 
 OPENSTACK_CONFIGUE = {
     'os_auth_url': 'http://25.66.88.22:35357/v3',
@@ -38,6 +39,7 @@ class OpenstackDriver():
                            project_name=self.project_name)
         sess = session.Session(auth=auth)
         self.client = Client(self.client_version, session=sess)
+        self.neutron_client = Neutron_Client(session=sess)
 
     def show(self, instance_id):
         server = self.client.servers.get(
@@ -80,3 +82,21 @@ class OpenstackDriver():
         self.client.servers.start(instance_id)
         return True
 
+    def net_list(self):
+        list_net = self.neutron_client.list_networks()
+        return list_net
+
+    def choice_network(self, instance_id):
+        network_choice = ''
+        workload = self.show(instance_id=instance_id)
+        network_name_list = []
+        for key, value in workload.networks.items():
+            network_name_list.append(key)
+
+        list_net_obj = self.neutron_client.list_networks()
+        list_network = list_net_obj['networks']
+        for network in list_network:
+            if network['name'] not in network_name_list:
+                network_choice = network['id']
+                break
+        return network_choice

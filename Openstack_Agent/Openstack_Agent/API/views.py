@@ -91,8 +91,8 @@ def add_nic(request):
         openstack_config['os_user_domain_name'] = request.POST.get('os_user_domain_name', None)
         openstack_config['os_novaclient_version'] = request.POST.get('os_novaclient_version', None)
         workload_uuid = request.POST.get('uuid', None)
-        network_id = request.POST.get('network_id', None)
         openstack_client = OpenstackDriver(cloud_config=openstack_config)
+        network_id = openstack_client.choice_network(instance_id=workload_uuid)
         openstack_client.add_nic(instance_id=workload_uuid, net_id=network_id)
         response = openstack_client.show(instance_id=workload_uuid)
         workload_name = response._info['OS-EXT-SRV-ATTR:instance_name']

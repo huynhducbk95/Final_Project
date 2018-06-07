@@ -30,7 +30,7 @@ class QemuDriver():
                        '--block', ]
         data_dict = self.convert_data(cmd_get_nic)
         list_nic = data_dict['return']
-        nic_name = list_nic[len(list_nic)]['name']
+        nic_name = list_nic[len(list_nic)-1]['name']
         cmd_add_nic = ['virsh',
                        'qemu-agent-command',
                        self.workload_name,
@@ -42,6 +42,7 @@ class QemuDriver():
 
     def convert_data(self, cmd):
         response = subprocess.run(cmd, stdout=subprocess.PIPE)
-        data = response.decode('utf-8')
+        data = response.stdout.decode('utf-8')
         data_dict = json.loads(data[0:-2])
         return data_dict
+
